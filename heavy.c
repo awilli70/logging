@@ -76,17 +76,18 @@ int main(int argc, char const *argv[]) {
 
   printf("Reps: %d, Write Size: %d\n", repetitions, write_size);
 
+  pthread_t threads[write_size];
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+
   for (int i = 0; i < repetitions; i++) {
     struct ThreadData *td = malloc(sizeof(struct ThreadData));
     assert(td != NULL);
     td->write_size = write_size;
     td->file_number = (repetitions % 10) + '0';
 
-    pthread_t thread;
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    pthread_create(&thread, &attr, perform_write, (void *)td);
+    pthread_create(&threads[i], &attr, perform_write, (void *)td);
   }
   exit(EXIT_SUCCESS);
 }
