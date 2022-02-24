@@ -82,7 +82,7 @@ int main(int argc, char const *argv[]) {
 
   printf("Reps: %d, Write Size: %d\n", repetitions, write_size);
 
-  pthread_t threads[write_size];
+  pthread_t threads[repetitions];
   pthread_attr_t attr;
   pthread_attr_init(&attr);
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
