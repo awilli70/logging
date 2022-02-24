@@ -1,0 +1,9 @@
+#!/usr/bin/python3
+
+from os import remove as rm
+
+alpha_list = list("ABCDEFGHIJKLMNOPQRSTUVWXY")
+
+for letter in alpha_list:
+    path = "/tmp/" + letter
+    rm(path)

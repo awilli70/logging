@@ -17,6 +17,7 @@
 struct __attribute__((__packed__)) ThreadData {
   int write_size;
   char file_number;
+  int write_number;
 };
 
 void output_usage_and_end(int exit_code) {
@@ -39,6 +40,7 @@ void *perform_write(void *thread_data) {
   int fd = open(filename, O_RDWR | O_CREAT, S_IRWXU | S_IRGRP | S_IWGRP);
   write(fd, buf, td->write_size);
   close(fd);
+  printf("Wrote %d to %s\n", td->write_number, filename);
   free(buf);
   free(td);
   return NULL;
@@ -85,9 +87,11 @@ int main(int argc, char const *argv[]) {
     struct ThreadData *td = malloc(sizeof(struct ThreadData));
     assert(td != NULL);
     td->write_size = write_size;
-    td->file_number = (repetitions % 10) + '0';
+    td->file_number = (i  % 25) + 'A';
+    td->write_number = i;
 
     pthread_create(&threads[i], &attr, perform_write, (void *)td);
   }
+  for(;;){asm("");}
   exit(EXIT_SUCCESS);
 }
