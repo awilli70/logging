@@ -1,3 +1,4 @@
 *.o
 heavy
 standard
+output*

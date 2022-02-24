@@ -39,12 +39,12 @@ void *perform_write(void *thread_data) {
   filename[5] = td->file_number;
   filename[6] = '\0';
 
-  pthread_mutex_lock(&locks[file_number - 'A']);
+  pthread_mutex_lock(&locks[td->file_number - 'A']);
   int fd = open(filename, O_RDWR | O_CREAT, S_IRWXU | S_IRGRP | S_IWGRP);
-  write(fd, buf, td->write_size);
+  int bytes = write(fd, buf, td->write_size);
   close(fd);
-  pthread_mutex_unlock(&locks[file_number - 'A']);
-  printf("Wrote %d to %s\n", td->write_number, filename);
+  pthread_mutex_unlock(&locks[td->file_number - 'A']);
+  printf("Write %d of size %d to %s\n", td->write_number, bytes, filename);
   free(buf);
   free(td);
   return NULL;
@@ -88,7 +88,7 @@ int main(int argc, char const *argv[]) {
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
   for (int i = 0; i < 25; i++) {
-    pthread_mutex_init(&locks[i]);
+    pthread_mutex_init(&locks[i], NULL);
   }
 
   for (int i = 0; i < repetitions; i++) {
