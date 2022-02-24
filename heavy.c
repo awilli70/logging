@@ -14,6 +14,8 @@
 
 #define KILOBYTE 1024
 
+pthread_mutex_t locks[25];
+
 struct __attribute__((__packed__)) ThreadData {
   int write_size;
   char file_number;
@@ -37,9 +39,11 @@ void *perform_write(void *thread_data) {
   filename[5] = td->file_number;
   filename[6] = '\0';
 
+  pthread_mutex_lock(&locks[file_number - 'A']);
   int fd = open(filename, O_RDWR | O_CREAT, S_IRWXU | S_IRGRP | S_IWGRP);
   write(fd, buf, td->write_size);
   close(fd);
+  pthread_mutex_unlock(&locks[file_number - 'A']);
   printf("Wrote %d to %s\n", td->write_number, filename);
   free(buf);
   free(td);
@@ -83,15 +87,21 @@ int main(int argc, char const *argv[]) {
   pthread_attr_init(&attr);
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
+  for (int i = 0; i < 25; i++) {
+    pthread_mutex_init(&locks[i]);
+  }
+
   for (int i = 0; i < repetitions; i++) {
     struct ThreadData *td = malloc(sizeof(struct ThreadData));
     assert(td != NULL);
     td->write_size = write_size;
-    td->file_number = (i  % 25) + 'A';
+    td->file_number = (i % 25) + 'A';
     td->write_number = i;
 
     pthread_create(&threads[i], &attr, perform_write, (void *)td);
   }
-  for(;;){asm("");}
+  for (;;) {
+    asm("");
+  }
   exit(EXIT_SUCCESS);
 }
