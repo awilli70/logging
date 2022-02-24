@@ -13,7 +13,10 @@ NOTES:   repetitions and write_size must be greater than 0
 
 * standard.c - to be created
 * random.c - defines some general helper functions for random buffer allocation
+* cleanup - removes files created by heavy.c
 
 Usage:
 
 Compile with `make`, run with ./heavy or ./standard
+
+Cleanup: `chmod u+x cleanup`, run with ./cleanup
