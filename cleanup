@@ -2,6 +2,7 @@
 
 from os import remove as rm
 from os.path import exists
+from glob import glob
 
 alpha_list = list("ABCDEFGHIJKLMNOPQRSTUVWXY")
 
@@ -9,5 +10,6 @@ for letter in alpha_list:
     path = "/tmp/" + letter
     if exists(path):
         rm(path)
-if exists("./output.txt"):
-    rm("./output.txt")
+outfiles = glob('./*.out')
+for file in outfiles:
+    rm(file)

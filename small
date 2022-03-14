@@ -25,7 +25,8 @@ def apply_rule(y, x, board):
 
 
 def write_board(board, outfile, min_y, min_x, max_y, max_x):
-    with open(outfile, 'w') as of:
+    with open(outfile + '.out', 'w') as of:
+        of.write(f'{min_x, min_y}\n')
         for y in range(min_y, max_y + 1):
             for x in range(min_x, max_x + 1):
                 of.write("#" if board[(y, x)] == 1 else ".")
@@ -33,7 +34,7 @@ def write_board(board, outfile, min_y, min_x, max_y, max_x):
         of.write('\n')
 
 
-def game_of_life(board, duration, max_x, max_y):
+def game_of_life(board, duration, outfile, max_x, max_y):
     iterations = 0
     start_time = default_timer()
     min_x = min_y = 0
@@ -54,7 +55,7 @@ def game_of_life(board, duration, max_x, max_y):
         new_board = {(y, x): apply_rule(y, x, board)
                      for y in range(min_y, max_y + 1)
                      for x in range(min_x, max_x + 1)}
-        write_board(new_board, "output.txt", min_y, min_x, max_y, max_x)
+        write_board(new_board, outfile, min_y, min_x, max_y, max_x)
         board = new_board
     return iterations
 
@@ -66,12 +67,12 @@ def main():
                  for y in range(len(data))
                  for x in range(len(data[0]))}
         print(
-            f'Iterations: {game_of_life(board, float(argv[1]), len(data[0]), len(data))}')
+            f'{argv[2]} Iterations: {game_of_life(board, float(argv[1]), argv[2], len(data[0]), len(data))}')
         exit()
 
 
 if __name__ == "__main__":
-    if len(argv) != 2:
-        print(f"usage: {argv[0]} duration")
+    if len(argv) != 3:
+        print(f"USAGE: {argv[0]} duration outfile")
         exit()
     main()

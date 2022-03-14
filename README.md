@@ -17,11 +17,11 @@ step to disk for a specified duration. Will output total iterations after
 completion
 
 ```bash
-USAGE: ./small <duration>
+USAGE: ./small <duration> <outfile>
 ```
 
 * random.c - defines some general helper functions for random buffer allocation
-* cleanup - removes files created by heavy.c
+* cleanup - removes files created by heavy.c and small
 
 Usage:
 
