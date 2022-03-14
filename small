@@ -1,0 +1,77 @@
+#!/usr/bin/python3
+
+# Conway's Game of Life
+# Each Step Writes output board to disk
+
+from sys import argv
+from timeit import default_timer
+
+
+def apply_rule(y, x, board):
+    alive_rules = [0, 0, 1, 1, 0, 0, 0, 0, 0]
+    dead_rules = [0, 0, 0, 1, 0, 0, 0, 0, 0]
+    alive = (0 if (y, x) not in board else board[(y, x)])
+    neighbors = [(ny, nx) for ny in range(y - 1, y + 2)
+                 for nx in range(x - 1, x + 2)]
+    neighbors.remove((y, x))
+    count = 0
+    for coord in neighbors:
+        if coord in board:
+            count += board[coord]
+    if alive == 1:
+        return alive_rules[count]
+    else:
+        return dead_rules[count]
+
+
+def write_board(board, outfile, min_y, min_x, max_y, max_x):
+    with open(outfile, 'w') as of:
+        for y in range(min_y, max_y + 1):
+            for x in range(min_x, max_x + 1):
+                of.write("#" if board[(y, x)] == 1 else ".")
+            of.write('\n')
+        of.write('\n')
+
+
+def game_of_life(board, duration, max_x, max_y):
+    iterations = 0
+    start_time = default_timer()
+    min_x = min_y = 0
+    while ((default_timer() - start_time) < duration):
+        iterations += 1
+        for key in board.keys():
+            y = key[0]
+            x = key[1]
+            val = board[key]
+            if val == 1 and y <= min_y:
+                min_y = y - 1
+            elif val == 1 and x <= min_x:
+                min_x = x - 1
+            elif val == 1 and y >= max_y:
+                max_y = y + 1
+            elif val == 1 and x >= max_x:
+                max_x = x + 1
+        new_board = {(y, x): apply_rule(y, x, board)
+                     for y in range(min_y, max_y + 1)
+                     for x in range(min_x, max_x + 1)}
+        write_board(new_board, "output.txt", min_y, min_x, max_y, max_x)
+        board = new_board
+    return iterations
+
+
+def main():
+    with open('initial_config.txt') as f:
+        data = list(map(lambda x: x.strip(), f.readlines()))
+        board = {(y, x): (1 if data[y][x] == '#' else 0)
+                 for y in range(len(data))
+                 for x in range(len(data[0]))}
+        print(
+            f'Iterations: {game_of_life(board, float(argv[1]), len(data[0]), len(data))}')
+        exit()
+
+
+if __name__ == "__main__":
+    if len(argv) != 2:
+        print(f"usage: {argv[0]} duration")
+        exit()
+    main()

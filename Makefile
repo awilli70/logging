@@ -11,9 +11,6 @@ all: $(EXECS)
 
 heavy: heavy.o random.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
-
-standard: standard.o random.o
-	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
-
+	
 clean:
 	rm -f $(EXECS)  *.o
