@@ -120,10 +120,10 @@ int main(int argc, char const *argv[]) {
   seconds = write_end.tv_sec - write_start.tv_sec;
   microseconds = write_end.tv_usec - write_start.tv_usec;
   printf("Time elapsed: %ds %dus\n", seconds, microseconds);
-  int bandwidth =
+  float bandwidth =
       (repetitions * write_size) / ((seconds * 1000000) + microseconds);
   bandwidth *= 1000;
-  printf("Bandwidth: %d bytes/sec\n", bandwidth);
+  printf("Bandwidth: %0.0f bytes/sec\n", bandwidth);
 
   exit(EXIT_SUCCESS);
 }
