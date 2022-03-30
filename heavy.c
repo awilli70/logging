@@ -56,7 +56,7 @@ void *perform_write(void *thread_data) {
   int bytes = write(fd, buf, td->write_size);
   close(fd);
   pthread_mutex_unlock(&locks[td->file_number - 'A']);
-  printf("Write %d of size %d to %s\n", td->write_number, bytes, filename);
+  // printf("Write %d of size %d to %s\n", td->write_number, bytes, filename);
   free(buf);
   free(td);
   return NULL;
