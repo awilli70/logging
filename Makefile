@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS  = -O2 -g -Wall -Wextra -Werror $(IFLAGS)
 LDFLAGS = -pthread -lpthread
 
-EXECS   = heavy standard setup
+EXECS   = heavy
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
