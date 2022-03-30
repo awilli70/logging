@@ -32,9 +32,11 @@ def write_board(board, outfile, min_y, min_x, max_y, max_x):
                 of.write("#" if board[(y, x)] == 1 else ".")
             of.write('\n')
         of.write('\n')
+    return ((max_y - min_y) + (max_x - min_x))
 
 
 def game_of_life(board, duration, outfile, max_x, max_y):
+    written = 0
     iterations = 0
     start_time = default_timer()
     min_x = min_y = 0
@@ -55,9 +57,9 @@ def game_of_life(board, duration, outfile, max_x, max_y):
         new_board = {(y, x): apply_rule(y, x, board)
                      for y in range(min_y, max_y + 1)
                      for x in range(min_x, max_x + 1)}
-        write_board(new_board, outfile, min_y, min_x, max_y, max_x)
+        written += write_board(new_board, outfile, min_y, min_x, max_y, max_x)
         board = new_board
-    return iterations
+    return (iterations, written)
 
 
 def main():
@@ -66,8 +68,11 @@ def main():
         board = {(y, x): (1 if data[y][x] == '#' else 0)
                  for y in range(len(data))
                  for x in range(len(data[0]))}
+        result = game_of_life(board, float(
+            argv[1]), argv[2], len(data[0]), len(data))
         print(
-            f'{argv[2]} Iterations: {game_of_life(board, float(argv[1]), argv[2], len(data[0]), len(data))}')
+            f'{argv[2]} Iterations: {result[0]}')
+        print(f'Bandwidth: {result[1] / float(argv[1])} bytes/sec')
         exit()
 
 
