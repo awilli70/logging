@@ -121,7 +121,7 @@ int main(int argc, char const *argv[]) {
   microseconds = write_end.tv_usec - write_start.tv_usec;
   printf("Time elapsed: %ds %dus\n", seconds, microseconds);
   int bandwidth =
-      (repetitions * write_size) / ((seconds * 1000) + microseconds);
+      (repetitions * write_size) / ((seconds * 1000000) + microseconds);
   bandwidth *= 1000;
   printf("Bandwidth: %d bytes/sec\n", bandwidth);
 
